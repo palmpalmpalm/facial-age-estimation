@@ -41,7 +41,10 @@ def facial_age_estimate(frame):
         face = frame[max(0, box[1] - padding):min(box[1] + box[3] + padding, frame.shape[0] - 1),
                max(0, box[0] - padding):min(box[0] + box[2] + padding, frame.shape[1] - 1)]
         
+        preprocessed_face = preprocess_for_fae(face)
         
+        age = facial_age_estimation_model.predict(np.array([preprocessed_face]))
+        print(age)
         
         
     return frame
