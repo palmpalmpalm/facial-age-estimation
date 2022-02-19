@@ -61,7 +61,7 @@ def main():
         if ret == True:
             
             # display detected face
-            cv.imshow('live face detection', facial_age_estimate(frame))
+            cv.imshow('facial age estimation', facial_age_estimate(frame))
             if cv.waitKey(1) == ord('q'):
                 break
             
