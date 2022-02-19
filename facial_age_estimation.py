@@ -29,24 +29,28 @@ def facial_age_estimate(frame):
     # get face bboxess from face_detection_model
     bboxes = get_face_box(frame)
     
-    # draw rectangles
-    for (x,y,w,h) in bboxes:
-        cv.rectangle(frame, (x,y), (x+w, y+h), (0,255,0), 2)
-    
     # set padding to 20
     padding = 20
     
+    # inferencing
     for box in bboxes:
+        # box coordinate
+        x,y,w,h = box[0],box[1],box[2],box[3] 
+        
         # get face frame
-        face = frame[max(0, box[1] - padding):min(box[1] + box[3] + padding, frame.shape[0] - 1),
-               max(0, box[0] - padding):min(box[0] + box[2] + padding, frame.shape[1] - 1)]
+        face = frame[max(0, y - padding):min(y + h + padding, frame.shape[0] - 1),
+               max(0, x - padding):min(x + w + padding, frame.shape[1] - 1)]
         
         preprocessed_face = preprocess_for_fae(face)
         
         age = facial_age_estimation_model.predict(np.array([preprocessed_face]))
-        print(age)
         
+        # draw result on frame
+        label = 'Age: {}'.format(int(age[0][0]))
+        cv.putText(frame, label, (x, y - 10), cv.FONT_HERSHEY_TRIPLEX, 0.8, (0, 255, 0), 2, cv.LINE_AA)
+        cv.rectangle(frame, (x,y), (x+w, y+h), (0,255,0), 2)              
         
+
     return frame
 
 
